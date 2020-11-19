@@ -1,6 +1,6 @@
 package bank;
 
-import access.Card;
+import accesstools.Card;
 import java.math.BigDecimal;
 import java.util.Currency;
 
@@ -13,7 +13,7 @@ public class Account {
     }
 
     public void decrease (BigDecimal value, Currency currency){
-        //todo проверка на соответвие валюты
+        //todo проверка на соответвие валюты и/или конвертация
         balance = new Balance(balance.getValue().subtract(value), balance.getCurrency());
     }
 }
