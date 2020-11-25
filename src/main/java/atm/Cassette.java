@@ -16,8 +16,6 @@ public class Cassette {
     }
 
     public void getBanknotes (int amount){
-        if (currentAmount < amount)
-
         currentAmount -= amount;
     }
 
