@@ -6,7 +6,6 @@ import javafx.print.Printer;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-
 import java.math.BigDecimal;
 import java.util.Currency;
 
