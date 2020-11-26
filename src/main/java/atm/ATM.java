@@ -22,8 +22,8 @@ public class ATM {
         //todo чтение из properties количество банкнот в кассетах и коннект. это должно быть static?
         cassette = new ArrayList<>();
         cassette.add(new Cassette(RUR_100,100));
-        cassette.add(new Cassette(RUR_100,1000));
-        cassette.add(new Cassette(USD_20, 100));
+        cassette.add(new Cassette(RUR_1000,100));
+        cassette.add(new Cassette(USD_20,100));
         cassette.add(new Cassette(EUR_50,100));
         connection = new Connection("Bank", 443);
     }
