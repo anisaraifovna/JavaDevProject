@@ -1,6 +1,6 @@
 package atm;
 
-import atm.exceptions.ATMAvailableSumException;
+import atm.exceptions.ATMCashNotAvailableException;
 import bank.Transaction;
 import common.Money;
 import lombok.NonNull;
@@ -28,7 +28,7 @@ public class ATM {
         connection = new Connection("Bank", 443);
     }
 
-    private boolean checkAvailableValue(Currency currency, int value){
+    private boolean checkAvailableCash (Currency currency, int value){
         int sum = cassette.stream()
                 .filter(c -> c.getBanknote().getCurrency().equals(currency))
                 .mapToInt(c -> c.getBanknote().getDenomination()*c.getCurrentAmount())
@@ -36,10 +36,10 @@ public class ATM {
         return sum >= value;
     }
 
-    public List<Banknote> getCash (accesstools.Card card, Currency currency, int value) throws ATMAvailableSumException {
+    public List<Banknote> getCash (accesstools.Card card, Currency currency, int value) throws ATMCashNotAvailableException {
 
-        if (!checkAvailableValue(currency, value))
-            throw new ATMAvailableSumException();
+        if (!checkAvailableCash(currency, value))
+            throw new ATMCashNotAvailableException();
 
         connection.open();
         Transaction transaction = new Transaction(card, new Money(BigDecimal.valueOf(value), currency));

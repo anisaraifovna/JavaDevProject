@@ -6,9 +6,9 @@ import lombok.Setter;
 
 public class Cassette {
     @Getter @NonNull
-    Banknote banknote;
+    private Banknote banknote;
     @Getter @Setter @NonNull
-    int currentAmount;
+    private int currentAmount;
 
     public Cassette(Banknote banknote, int currentAmount) {
         this.banknote = banknote;

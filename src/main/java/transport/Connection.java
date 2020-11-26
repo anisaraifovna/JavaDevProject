@@ -3,10 +3,10 @@ package transport;
 import lombok.Getter;
 
 public class Connection {
-    String host;
-    int port;
+    private String host;
+    private int port;
     @Getter
-    boolean isOpen;
+    private boolean isOpen;
 
     public Connection(String host, int port) {
         this.host = host;
