@@ -4,6 +4,7 @@ import lombok.Getter;
 
 import java.util.Currency;
 
+@Getter
 public enum Banknote {
 
     RUR_100 (100,Currency.getInstance("RUR")),
@@ -17,8 +18,8 @@ public enum Banknote {
     EUR_50 (50,Currency.getInstance("EUR")),
     EUR_100 (100,Currency.getInstance("EUR"));
 
-    @Getter private final int denomination;
-    @Getter private final Currency currency;
+    private final int denomination;
+    private final Currency currency;
 
     Banknote(int denomination, Currency currency) {
         this.denomination = denomination;

@@ -6,12 +6,12 @@ import lombok.NonNull;
 import lombok.Setter;
 import java.util.Date;
 
+@Getter @NonNull
 public class Card {
-    @Getter @NonNull
+
     private String number;
-    @Getter @Setter @NonNull
+    @Setter
     private Date expiryDate;
-    @Getter @NonNull
     private String pin;
 
     public Card(String number, Date expiryDate) throws CardFormatException {

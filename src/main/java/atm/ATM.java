@@ -3,6 +3,7 @@ package atm;
 import atm.exceptions.ATMCashNotAvailableException;
 import bank.Transaction;
 import common.Money;
+import lombok.Getter;
 import lombok.NonNull;
 import transport.Connection;
 import java.math.BigDecimal;
@@ -11,11 +12,10 @@ import java.util.Currency;
 import java.util.List;
 import static atm.Banknote.*;
 
+@NonNull @Getter
 public class ATM {
 
-    @NonNull
     private List<Cassette> cassette;
-    @NonNull
     private Connection connection;
 
     public ATM() {

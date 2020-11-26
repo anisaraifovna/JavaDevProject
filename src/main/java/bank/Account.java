@@ -2,18 +2,17 @@ package bank;
 
 import accesstools.Card;
 import common.Money;
-import javafx.print.Printer;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 import java.math.BigDecimal;
 import java.util.Currency;
 
+@Getter @Setter
 public class Account {
 
-    @Getter @Setter @NonNull
+    @NonNull
     private Money balance;
-    @Getter @Setter
     private Card card;
 
     public static Account findAccount(Card card) {

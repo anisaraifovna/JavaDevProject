@@ -4,10 +4,11 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
+@Getter @NonNull
 public class Cassette {
-    @Getter @NonNull
+
     private Banknote banknote;
-    @Getter @Setter @NonNull
+    @Setter
     private int currentAmount;
 
     public Cassette(Banknote banknote, int currentAmount) {

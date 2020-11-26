@@ -3,14 +3,14 @@ package bank;
 import accesstools.Card;
 import common.Money;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
 
+@Getter @NonNull
 public class Transaction {
-    @Getter @Setter
+    @Setter
     private TransactionStatus status;
-    @Getter
     private Money value;
-    @Getter
     private Card card;
 
     public Transaction(Card card, Money value) {

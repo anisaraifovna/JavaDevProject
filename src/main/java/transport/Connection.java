@@ -1,11 +1,12 @@
 package transport;
 
 import lombok.Getter;
+import lombok.NonNull;
 
+@Getter @NonNull
 public class Connection {
     private String host;
     private int port;
-    @Getter
     private boolean isOpen;
 
     public Connection(String host, int port) {
