@@ -10,22 +10,21 @@ import java.util.Date;
 public class Card {
 
     private String number;
-    @Setter
     private Date expiryDate;
     private String pin;
 
-    public Card(String number, Date expiryDate) throws CardFormatException {
+    public Card(String number, Date expiryDate, String pin) throws CardFormatException {
         if (number.matches("^[0-9]{16}$"))
             this.number = number;
         else
             throw new CardFormatException("Неверный формат номера карты ");
-        this.expiryDate = expiryDate;
-    }
 
-    public void setPin(String pin) throws CardFormatException {
         if (pin.matches("^[0-9]{4}$"))
             this.pin = pin;
         else
             throw new CardFormatException("Неверный формат пин-кода карты ");
+
+        this.expiryDate = expiryDate;
+
     }
 }

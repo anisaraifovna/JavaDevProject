@@ -11,8 +11,7 @@ public class Main {
     public static void main(String[] args) {
         ATM atm = new ATM();
         try {
-            Card card = new Card("1234567891011121", new Date(1234567890));
-            card.setPin("1234");
+            Card card = new Card("1234567891011121", new Date(1234567890), "1324");
             List<Banknote> banknotes = atm.getCash(card, Currency.getInstance("RUR"), 1000);
             System.out.println(banknotes);
         }
