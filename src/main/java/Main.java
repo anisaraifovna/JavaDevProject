@@ -1,4 +1,4 @@
-import accesstools.Card;
+import accesstools.DebitCard;
 import atm.ATM;
 import atm.Banknote;
 import common.Currency;
@@ -9,8 +9,8 @@ public class Main {
     public static void main(String[] args) {
         ATM atm = new ATM();
         try {
-            Card card = new Card("1234567891011121", new Date(1234567890), "1324");
-            List<Banknote> banknotes = atm.getCash(card, Currency.RUR, 1001);
+            DebitCard card = new DebitCard("1234567891011121", new Date(1234567890), "1324");
+            List<Banknote> banknotes = atm.getCash(card, Currency.RUR, 100);
             System.out.println(banknotes);
         }
         catch (Exception e){

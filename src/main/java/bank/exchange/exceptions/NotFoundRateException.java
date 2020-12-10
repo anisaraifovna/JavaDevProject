@@ -1,4 +1,4 @@
-package bank.exchange.excpeitons;
+package bank.exchange.exceptions;
 
 public class NotFoundRateException extends Exception {
     private final static String MESSAGE = "Не найден курс для конвертации";

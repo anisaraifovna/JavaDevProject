@@ -1,5 +1,6 @@
 package atm;
 
+import accesstools.DebitCard;
 import atm.exceptions.ATMCashNotAvailableException;
 import bank.transactions.TransactionServer;
 import bank.transactions.TransactionCash;
@@ -12,27 +13,14 @@ import transport.Connection;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import static atm.Banknote.*;
 
 @NonNull @Getter
 public class ATM {
 
-    private List<Cassette> cassette;
-    private Connection connection;
-    private int deviceId;
-    private int operationId;
-
-    public ATM() {
-        //todo чтение из properties количество банкнот в кассетах и коннект. это должно быть static?
-        cassette = new ArrayList<>();
-        cassette.add(new Cassette(RUR_100,100));
-        cassette.add(new Cassette(RUR_1000,100));
-        cassette.add(new Cassette(USD_20,100));
-        cassette.add(new Cassette(EUR_50,100));
-        connection = new Connection("Bank", 443);
-        deviceId = 1;
-        operationId = 0;
-    }
+    private List<Cassette> cassette = new ArrayList<>();
+    private Connection connection = new Connection("Bank", 443);
+    private int deviceId = 1;
+    private int operationId = 0;
 
     private boolean checkAvailableCash (Currency currency, int value){
         int sum = cassette.stream()
@@ -43,7 +31,7 @@ public class ATM {
         return sum >= value;
     }
 
-    public List<Banknote> getCash (accesstools.Card card, Currency currency, int value) throws ATMCashNotAvailableException, DoubleTransactionException {
+    public List<Banknote> getCash (DebitCard card, Currency currency, int value) throws ATMCashNotAvailableException, DoubleTransactionException {
 
         operationId++;
 

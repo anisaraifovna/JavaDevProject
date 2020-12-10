@@ -1,26 +1,27 @@
 package bank.accounts;
 
+import accesstools.Card;
 import bank.exchange.ExchangeStorage;
-import bank.exchange.excpeitons.NotFoundRateException;
+import bank.exchange.exceptions.NotFoundRateException;
 import common.Money;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NonNull;
-
 import java.math.BigDecimal;
 
-@Getter
-public class Account {
+@Getter @Builder
+public class Account<T extends Card> {
 
     @NonNull
     private int accountId;
     @NonNull
     private Money balance;
-    private String cardNumber;
+    private T card;
 
-    public Account(@NonNull int accountId, @NonNull Money balance, String cardNumber) {
+    public Account(@NonNull int accountId, @NonNull Money balance, T card) {
         this.accountId = accountId;
         this.balance = balance;
-        this.cardNumber = cardNumber;
+        this.card = card;
     }
 
     public void decrease (Money value) throws NotFoundRateException {

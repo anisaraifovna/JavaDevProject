@@ -1,10 +1,10 @@
 package bank.transactions;
 
-import accesstools.Card;
+import accesstools.DebitCard;
+import bank.accounts.Account;
 import bank.accounts.AccountStorage;
-import bank.accounts.CurrentAccount;
 import bank.accounts.exceptions.NotFoundAccountException;
-import bank.exchange.excpeitons.NotFoundRateException;
+import bank.exchange.exceptions.NotFoundRateException;
 import bank.transactions.exceptions.NotEnoughMoneyException;
 import common.Money;
 import lombok.Getter;
@@ -19,12 +19,12 @@ public class TransactionCash {
     @Setter
     private TransactionStatus status;
     private Money money;
-    private Card card;
+    private DebitCard card;
     private LocalDateTime datetime;
     private int deviceId;
     private int operationId;
 
-    public TransactionCash(Card card, Money money, int deviceId, int operationId) {
+    public TransactionCash(DebitCard card, Money money, int deviceId, int operationId) {
         this.money = money;
         this.card = card;
         this.deviceId = deviceId;
@@ -33,8 +33,7 @@ public class TransactionCash {
     }
 
     public void execute() throws NotFoundRateException, NotFoundAccountException, NotEnoughMoneyException {
-        AccountStorage<CurrentAccount> accountStorage = new AccountStorage();
-        CurrentAccount account = accountStorage.getAccountByCard(card.getNumber());
+        Account<DebitCard> account = new AccountStorage().getAccountByCard(card);
         account.decrease(money);
         if (account.getBalance().getValue().signum()<0)
             throw new NotEnoughMoneyException();
