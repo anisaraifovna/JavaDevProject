@@ -3,7 +3,6 @@ package accesstools;
 import accesstools.exceptions.CardFormatException;
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.Setter;
 import java.util.Date;
 
 @Getter @NonNull

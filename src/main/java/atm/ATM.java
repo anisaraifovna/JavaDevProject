@@ -1,14 +1,16 @@
 package atm;
 
 import atm.exceptions.ATMCashNotAvailableException;
-import bank.Transaction;
+import bank.transactions.TransactionServer;
+import bank.transactions.TransactionCash;
+import bank.transactions.exceptions.DoubleTransactionException;
+import common.Currency;
 import common.Money;
 import lombok.Getter;
 import lombok.NonNull;
 import transport.Connection;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Currency;
 import java.util.List;
 import static atm.Banknote.*;
 
@@ -17,6 +19,8 @@ public class ATM {
 
     private List<Cassette> cassette;
     private Connection connection;
+    private int deviceId;
+    private int operationId;
 
     public ATM() {
         //todo чтение из properties количество банкнот в кассетах и коннект. это должно быть static?
@@ -26,6 +30,8 @@ public class ATM {
         cassette.add(new Cassette(USD_20,100));
         cassette.add(new Cassette(EUR_50,100));
         connection = new Connection("Bank", 443);
+        deviceId = 1;
+        operationId = 0;
     }
 
     private boolean checkAvailableCash (Currency currency, int value){
@@ -33,17 +39,20 @@ public class ATM {
                 .filter(c -> c.getBanknote().getCurrency().equals(currency))
                 .mapToInt(c -> c.getBanknote().getDenomination()*c.getCurrentAmount())
                 .sum();
+
         return sum >= value;
     }
 
-    public List<Banknote> getCash (accesstools.Card card, Currency currency, int value) throws ATMCashNotAvailableException {
+    public List<Banknote> getCash (accesstools.Card card, Currency currency, int value) throws ATMCashNotAvailableException, DoubleTransactionException {
+
+        operationId++;
 
         if (!checkAvailableCash(currency, value))
             throw new ATMCashNotAvailableException();
 
-        connection.open();
-        Transaction transaction = new Transaction(card, new Money(BigDecimal.valueOf(value), currency));
-        transaction.doTransaction();
+        TransactionServer transactionServer = connection.open();
+        TransactionCash transactionCash = new TransactionCash(card, new Money(BigDecimal.valueOf(value), currency), deviceId, operationId);
+        transactionServer.executeTransaction(transactionCash);
         connection.close();
         return getBanknotes (currency, value);
     }
