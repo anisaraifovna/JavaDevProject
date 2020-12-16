@@ -2,7 +2,7 @@ package bank.accounts;
 
 import accesstools.Card;
 import bank.exchange.ExchangeStorage;
-import bank.exchange.exceptions.NotFoundRateException;
+import common.BusinessException;
 import common.Money;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,12 +24,12 @@ public class Account<T extends Card> {
         this.card = card;
     }
 
-    public void decrease (Money value) throws NotFoundRateException {
+    public void decrease (Money value) throws BusinessException {
         BigDecimal rate = new ExchangeStorage().getRate(value.getCurrency(),balance.getCurrency());
         balance = new Money(balance.getValue().subtract(value.getValue().multiply(rate)), balance.getCurrency());
     }
 
-    public void increase (Money value) throws NotFoundRateException {
+    public void increase (Money value) throws BusinessException {
         BigDecimal rate = new ExchangeStorage().getRate(value.getCurrency(),balance.getCurrency());
         balance = new Money(balance.getValue().add(value.getValue().multiply(rate)), balance.getCurrency());
     }

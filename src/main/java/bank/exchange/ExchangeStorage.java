@@ -1,26 +1,28 @@
 package bank.exchange;
 
-import bank.exchange.exceptions.NotFoundRateException;
+import common.BusinessException;
 import common.Currency;
+import common.ErrorCodes;
 import lombok.Getter;
 import lombok.NonNull;
+import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@NonNull @Getter
+@NonNull @Getter @Setter
 public class ExchangeStorage {
     private List<ExchangeRate> exchangeRates = new ArrayList<>();
 
-    public BigDecimal getRate(Currency fromCurrency, Currency toCurrency) throws NotFoundRateException {
+    public BigDecimal getRate(Currency fromCurrency, Currency toCurrency) throws BusinessException {
         if (fromCurrency.equals(toCurrency))
             return BigDecimal.valueOf(1);
 
         ExchangeRate rate = exchangeRates.stream()
                 .filter(s -> s.getFromCurrency().equals(fromCurrency)&&s.getToCurrency().equals(toCurrency))
                 .findAny()
-                .orElseThrow(NotFoundRateException::new);
-
+                .orElseThrow(() -> new BusinessException(ErrorCodes.ERR_NOT_FOUND_RATE,fromCurrency.getCode(),toCurrency.getCode()));
         return rate.getRate();
     }
 }

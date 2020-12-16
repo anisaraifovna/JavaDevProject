@@ -1,11 +1,11 @@
 package atm;
 
 import accesstools.DebitCard;
-import atm.exceptions.ATMCashNotAvailableException;
 import bank.transactions.TransactionServer;
 import bank.transactions.TransactionCash;
-import bank.transactions.exceptions.DoubleTransactionException;
+import common.BusinessException;
 import common.Currency;
+import common.ErrorCodes;
 import common.Money;
 import lombok.Getter;
 import lombok.NonNull;
@@ -31,12 +31,12 @@ public class ATM {
         return sum >= value;
     }
 
-    public List<Banknote> getCash (DebitCard card, Currency currency, int value) throws ATMCashNotAvailableException, DoubleTransactionException {
+    public List<Banknote> getCash (DebitCard card, Currency currency, int value) throws BusinessException {
 
         operationId++;
 
         if (!checkAvailableCash(currency, value))
-            throw new ATMCashNotAvailableException();
+            throw new BusinessException(ErrorCodes.ERR_ATM_CASH_AVAIL,String.valueOf(value),currency.getCode());
 
         TransactionServer transactionServer = connection.open();
         TransactionCash transactionCash = new TransactionCash(card, new Money(BigDecimal.valueOf(value), currency), deviceId, operationId);

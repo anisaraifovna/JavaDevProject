@@ -1,6 +1,7 @@
 package accesstools;
 
-import accesstools.exceptions.CardFormatException;
+import common.BusinessException;
+import common.ErrorCodes;
 import lombok.Getter;
 import lombok.NonNull;
 import java.util.Date;
@@ -12,16 +13,16 @@ public class Card {
     private Date expiryDate;
     private String pin;
 
-    public Card(String number, Date expiryDate, String pin) throws CardFormatException {
+    public Card(String number, Date expiryDate, String pin) throws BusinessException {
         if (number.matches("^[0-9]{16}$"))
             this.number = number;
         else
-            throw new CardFormatException("Неверный формат номера карты ");
+            throw new BusinessException(ErrorCodes.ERR_CARD_FORMAT,number);
 
         if (pin.matches("^[0-9]{4}$"))
             this.pin = pin;
         else
-            throw new CardFormatException("Неверный формат пин-кода карты ");
+            throw new BusinessException(ErrorCodes.ERR_PIN_FORMAT);
 
         this.expiryDate = expiryDate;
 

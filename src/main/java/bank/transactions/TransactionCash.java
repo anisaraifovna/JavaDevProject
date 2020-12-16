@@ -3,15 +3,16 @@ package bank.transactions;
 import accesstools.DebitCard;
 import bank.accounts.Account;
 import bank.accounts.AccountStorage;
-import bank.accounts.exceptions.NotFoundAccountException;
-import bank.exchange.exceptions.NotFoundRateException;
-import bank.transactions.exceptions.NotEnoughMoneyException;
+import common.BusinessException;
 import common.Money;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.function.Predicate;
 
 @Getter @NonNull
 public class TransactionCash {
@@ -32,11 +33,10 @@ public class TransactionCash {
         datetime = LocalDateTime.now();
     }
 
-    public void execute() throws NotFoundRateException, NotFoundAccountException, NotEnoughMoneyException {
+    public void execute(Predicate<BigDecimal> predicate) throws BusinessException {
         Account<DebitCard> account = new AccountStorage().getAccountByCard(card);
         account.decrease(money);
-        if (account.getBalance().getValue().signum()<0)
-            throw new NotEnoughMoneyException();
+        predicate.test(account.getBalance().getValue());
     }
 
     @Override

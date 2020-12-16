@@ -1,7 +1,17 @@
 package common;
 
 public enum Currency {
-    RUR,
-    USD,
-    EUR
+    RUR("RUR"),
+    USD("USD"),
+    EUR("EUR");
+
+    private String code;
+
+    Currency(String code) {
+        this.code = code;
+    }
+
+    public String getCode() {
+        return code;
+    }
 }
