@@ -6,10 +6,8 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 @Getter @Setter @NonNull
 public class TransactionServer {
@@ -23,8 +21,7 @@ public class TransactionServer {
         }
 
         try {
-            Predicate<BigDecimal> isPositive = x -> x.signum() > 0;
-            transactionCash.execute(isPositive);
+            transactionCash.execute(x -> x.signum() > 0);
             transactionCash.setStatus(TransactionStatus.OK);
             transactionCashes.add(transactionCash);
         }
