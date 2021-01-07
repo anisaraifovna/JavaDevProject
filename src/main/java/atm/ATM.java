@@ -1,49 +1,46 @@
 package atm;
 
-import atm.exceptions.ATMCashNotAvailableException;
-import bank.Transaction;
+import accesstools.DebitCard;
+import bank.transactions.TransactionServer;
+import bank.transactions.TransactionCash;
+import common.BusinessException;
+import common.Currency;
+import common.ErrorCodes;
 import common.Money;
 import lombok.Getter;
 import lombok.NonNull;
 import transport.Connection;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Currency;
 import java.util.List;
-import static atm.Banknote.*;
 
 @NonNull @Getter
 public class ATM {
 
-    private List<Cassette> cassette;
-    private Connection connection;
-
-    public ATM() {
-        //todo чтение из properties количество банкнот в кассетах и коннект. это должно быть static?
-        cassette = new ArrayList<>();
-        cassette.add(new Cassette(RUR_100,100));
-        cassette.add(new Cassette(RUR_1000,100));
-        cassette.add(new Cassette(USD_20,100));
-        cassette.add(new Cassette(EUR_50,100));
-        connection = new Connection("Bank", 443);
-    }
+    private List<Cassette> cassette = new ArrayList<>();
+    private Connection connection = new Connection("Bank", 443);
+    private int deviceId = 1;
+    private int operationId = 0;
 
     private boolean checkAvailableCash (Currency currency, int value){
         int sum = cassette.stream()
                 .filter(c -> c.getBanknote().getCurrency().equals(currency))
                 .mapToInt(c -> c.getBanknote().getDenomination()*c.getCurrentAmount())
                 .sum();
+
         return sum >= value;
     }
 
-    public List<Banknote> getCash (accesstools.Card card, Currency currency, int value) throws ATMCashNotAvailableException {
+    public List<Banknote> getCash (DebitCard card, Currency currency, int value) throws BusinessException {
+
+        operationId++;
 
         if (!checkAvailableCash(currency, value))
-            throw new ATMCashNotAvailableException();
+            throw new BusinessException(ErrorCodes.ERR_ATM_CASH_AVAIL,String.valueOf(value),currency.getCode());
 
-        connection.open();
-        Transaction transaction = new Transaction(card, new Money(BigDecimal.valueOf(value), currency));
-        transaction.doTransaction();
+        TransactionServer transactionServer = connection.open();
+        TransactionCash transactionCash = new TransactionCash(card, new Money(BigDecimal.valueOf(value), currency), deviceId, operationId);
+        transactionServer.executeTransaction(transactionCash);
         connection.close();
         return getBanknotes (currency, value);
     }

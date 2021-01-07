@@ -1,5 +1,6 @@
 package transport;
 
+import bank.transactions.TransactionServer;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -15,8 +16,9 @@ public class Connection {
         this.isOpen = false;
     }
 
-    public void open(){
+    public TransactionServer open(){
         isOpen = true;
+        return new TransactionServer();
     }
 
     public void close(){
