@@ -4,16 +4,16 @@ import common.BusinessException;
 import common.ErrorCodes;
 import lombok.Getter;
 import lombok.NonNull;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Getter @NonNull
 public class Card {
 
     private String number;
-    private Date expiryDate;
+    private LocalDate expiryDate;
     private String pin;
 
-    public Card(String number, Date expiryDate, String pin) throws BusinessException {
+    public Card(String number, LocalDate expiryDate, String pin) throws BusinessException {
         if (number.matches("^[0-9]{16}$"))
             this.number = number;
         else

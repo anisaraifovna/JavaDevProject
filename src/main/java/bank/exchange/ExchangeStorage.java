@@ -17,7 +17,7 @@ public class ExchangeStorage {
 
     public BigDecimal getRate(Currency fromCurrency, Currency toCurrency) throws BusinessException {
         if (fromCurrency.equals(toCurrency))
-            return BigDecimal.valueOf(1);
+            return BigDecimal.ONE;
 
         ExchangeRate rate = exchangeRates.stream()
                 .filter(s -> s.getFromCurrency().equals(fromCurrency)&&s.getToCurrency().equals(toCurrency))
