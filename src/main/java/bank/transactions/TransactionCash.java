@@ -1,12 +1,13 @@
 package bank.transactions;
 
-import accesstools.DebitCard;
 import bank.accounts.Account;
 import bank.accounts.AccountStorage;
-import common.BusinessException;
+import bank.exception.BankingServerErrorCodes;
+import bank.exception.BankingServerException;
+import bank.exchange.ExchangeStorage;
 import common.Money;
+import common.accesstools.DebitCard;
 import lombok.Getter;
-import lombok.NonNull;
 import lombok.Setter;
 
 import java.math.BigDecimal;
@@ -14,16 +15,20 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-@Getter @NonNull
+@Getter
 public class TransactionCash {
 
     @Setter
     private TransactionStatus status;
-    private Money money;
-    private DebitCard card;
-    private LocalDateTime datetime;
-    private int deviceId;
-    private int operationId;
+    private final Money money;
+    private final DebitCard card;
+    private final LocalDateTime datetime;
+    private final int deviceId;
+    private final int operationId;
+    @Setter
+    private BigDecimal rate;
+    @Setter
+    private Account<DebitCard> account;
 
     public TransactionCash(DebitCard card, Money money, int deviceId, int operationId) {
         this.money = money;
@@ -33,25 +38,21 @@ public class TransactionCash {
         datetime = LocalDateTime.now();
     }
 
-    public void execute(Predicate<BigDecimal> predicate) throws BusinessException {
-        Account<DebitCard> account = new AccountStorage().getAccountByCard(card);
-        account.decrease(money);
-        predicate.test(account.getBalance().getValue());
+    public void init() throws BankingServerException {
+        setAccount(new AccountStorage().getAccountByCard(getCard().getNumber()));
+        setRate(new ExchangeStorage().getRate(getMoney().getCurrency(), account.getBalance().getCurrency()));
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TransactionCash that = (TransactionCash) o;
-        return deviceId == that.deviceId &&
-                operationId == that.operationId &&
-                Objects.equals(money, that.money) &&
-                Objects.equals(card, that.card);
+    public void execute(Predicate<BigDecimal> predicate) throws BankingServerException {
+        account.decrease(money, rate);
+        if (!predicate.test(account.getBalance().getValue()))
+            throw new BankingServerException(BankingServerErrorCodes.ERR_NOT_ENOUGH_MONEY);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(money, card, deviceId, operationId);
+    public boolean doubleCheck(TransactionCash transactionCash) {
+        return deviceId == transactionCash.getDeviceId() &&
+                operationId == transactionCash.getOperationId() &&
+                Objects.equals(money, transactionCash.getMoney()) &&
+                Objects.equals(card, transactionCash.getCard());
     }
 }

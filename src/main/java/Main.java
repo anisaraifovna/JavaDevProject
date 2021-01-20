@@ -1,16 +1,21 @@
-import accesstools.DebitCard;
 import atm.ATM;
 import atm.Banknote;
-import common.BusinessException;
+import atm.exception.ATMException;
 import common.Currency;
-import java.util.Date;
-import java.util.List;
+import common.accesstools.DebitCard;
+import common.exception.BusinessCommonException;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+
+import java.time.LocalDate;
+import java.util.Map;
 
 public class Main {
-    public static void main(String[] args) throws BusinessException {
-        ATM atm = new ATM();
-        DebitCard card = new DebitCard("1234567891011121", new Date(1234567890), "1324");
-        List<Banknote> banknotes = atm.getCash(card, Currency.RUR, 100);
-        System.out.println(banknotes);
+    public static void main(String[] args) throws ATMException, BusinessCommonException {
+        AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
+        ctx.register(ContextConfiguration.class);
+        ctx.refresh();
+        ATM atm = ctx.getBean(ATM.class);
+        DebitCard card = new DebitCard("1234567891011121", LocalDate.of(2021, 2, 12), "1324");
+        Map<Banknote, Integer> banknotes = atm.getCash(card, Currency.RUR, 100);
     }
 }

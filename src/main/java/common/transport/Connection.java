@@ -1,13 +1,14 @@
-package transport;
+package common.transport;
 
 import bank.transactions.TransactionServer;
 import lombok.Getter;
 import lombok.NonNull;
 
-@Getter @NonNull
+@Getter
+@NonNull
 public class Connection {
-    private String host;
-    private int port;
+    private final String host;
+    private final int port;
     private boolean isOpen;
 
     public Connection(String host, int port) {
@@ -16,8 +17,7 @@ public class Connection {
         this.isOpen = false;
     }
 
-    public TransactionServer open(){
-        isOpen = true;
+    public TransactionServer open() {
         return new TransactionServer();
     }
 
