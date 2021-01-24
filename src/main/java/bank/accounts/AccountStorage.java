@@ -1,11 +1,12 @@
 package bank.accounts;
 
-import accesstools.DebitCard;
-import common.BusinessException;
-import common.ErrorCodes;
+import bank.exception.BankingServerErrorCodes;
+import bank.exception.BankingServerException;
+import common.accesstools.DebitCard;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,10 +14,10 @@ import java.util.List;
 public class AccountStorage {
     private List<Account<DebitCard>> accounts = new ArrayList<>();
 
-    public Account<DebitCard> getAccountByCard(DebitCard card) throws BusinessException {
+    public Account<DebitCard> getAccountByCard(String cardNumber) throws BankingServerException {
         return accounts.stream()
-                .filter(s -> s.getCard().equals(card))
+                .filter(s -> s.getCard().getNumber().equals(cardNumber))
                 .findAny()
-                .orElseThrow(() -> new BusinessException(ErrorCodes.ERR_NOT_FOUND_ACCOUNT, "*"+card.getNumber().substring(12,15)));
+                .orElseThrow(() -> new BankingServerException(BankingServerErrorCodes.ERR_NOT_FOUND_ACCOUNT, "*" + cardNumber.substring(12, 15)));
     }
 }

@@ -1,9 +1,10 @@
-package accesstools;
+package common.accesstools;
 
-import common.BusinessException;
 import common.Money;
+import common.exception.BusinessCommonException;
 import lombok.NonNull;
 import lombok.Setter;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -12,7 +13,7 @@ public class CreditCard extends Card{
     private Money limit;
     private BigDecimal interestRate;
 
-    public CreditCard(String number, LocalDate expiryDate, String pin, Money limit, BigDecimal interestRate) throws BusinessException {
+    public CreditCard(String number, LocalDate expiryDate, String pin, Money limit, BigDecimal interestRate) throws BusinessCommonException {
         super(number, expiryDate, pin);
         this.limit = limit;
         this.interestRate = interestRate;
